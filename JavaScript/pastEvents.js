@@ -1,12 +1,27 @@
 const checkBoxJs = document.getElementById('checkJs');
 const cardsJs = document.getElementById('cardjs');
-let data = info.events
+let data;
 
-const getCategories = (events) => events.category
+let info;
 
-const categoriesWithoutRepeating  = new Set(data.map(getCategories));
+let getCategories;
 
-const arrayCategoriesWithoutRepeating = Array.from(categoriesWithoutRepeating);
+let categoriesWithoutRepeating;
+
+let arrayCategoriesWithoutRepeating;
+
+fetch ("http://amazing-events.herokuapp.com/api/events")
+    .then( response => response.json() )
+    .then( (response) => {
+        info = response;
+        data = info.events;
+        getCategories = (events) => events.category;
+        categoriesWithoutRepeating  = new Set(data.map(getCategories));
+        arrayCategoriesWithoutRepeating = Array.from(categoriesWithoutRepeating);
+        createCheckbox(arrayCategoriesWithoutRepeating, checkBoxJs);
+        createCards(data);
+    } )
+    .catch( error => console.log(error) )
 
 function createCheckbox(value, container) {
     let template = ''
@@ -16,8 +31,6 @@ function createCheckbox(value, container) {
         </label>`)
     container.innerHTML = template;
 }
-
-createCheckbox(arrayCategoriesWithoutRepeating, checkBoxJs)
 
 function createCards(events) {
     cardsJs.innerHTML = '';
@@ -38,7 +51,6 @@ function createCards(events) {
     }) 
     cardsJs.appendChild(fragment);
 }
-createCards(data);
 
 function filterCheckbox (events){
     const checked = Array.from(document.querySelectorAll( 'input[type=checkbox]:checked' )).map( input => input.value)

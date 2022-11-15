@@ -1,23 +1,39 @@
-let data = info.events
+const div = document.getElementById('card-details')
 
-const queryString = location.search 
-const params = new URLSearchParams(queryString)
-const id = params.get("id")
+let data;
 
+let info;
 
-const events = data.find(events => events._id == id)
+let queryString;
 
-const div = document.getElementById('cartota')
-div.innerHTML = `<div class="d-flex justify-content-center gap-4 cardsolita p-2 bg-light bg-gradient">
-                    <img src="${events.image}" class="card-img-top p-2 bg-light bg-gradient" alt="${events.name}">
-                    <div class="card-body d-flex justify-content-center align-items-center flex-column">
-                        <h3 class="card-title">${events.name}</h3>
-                        <br>
-                        <p class="card-text d-flex justify-content-evenly"><b>Date:</b>${events.date}</p>
-                        <p class="card-text d-flex justify-content-evenly"><b>Description:</b>${events.description}</p>
-                        <p class="card-text d-flex justify-content-evenly"><b>Place:</b>${events.place}</p>
-                        <p class="card-text d-flex justify-content-evenly"><b>Capacity:</b>${events.capacity}</p>
-                        <p class="card-text d-flex justify-content-evenly"><b>Assistance:</b>${events.assistance}</p>
-                        <p class="card-text d-flex justify-content-evenly"><b>Price:</b>${events.price}</p>
-                    </div>
-                </div> `
+let params;
+
+let id;
+
+fetch ("http://amazing-events.herokuapp.com/api/events")
+    .then( response => response.json() )
+    .then( (response) => {
+        info = response;
+        data = info.events;
+        queryString = location.search;
+        params = new URLSearchParams(queryString);
+        id = params.get("id")
+        events = events.find(event => event._id == id)
+            div.innerHTML = `
+                <div class="card rounded-4 cartaGrande" style="width: 16rem; height: 23rem;">
+                <img src="${tarjeta.image}" class="card-img-top" alt="FeriaDeComidas">
+                <div class="card-body">
+                    <h5 class="card-title text-center">${tarjeta.name}</h5>
+                    <p class="card-text text-center">${tarjeta.description}</p>
+                    <p class="card-text"><span class="fw-bold" >Date</span>: ${tarjeta.date}</p>
+                    <p class="card-text"><span class="fw-bold" >Category</span>: ${tarjeta.category}</p>
+                    <p class="card-text"><span class="fw-bold" >Place</span>: ${tarjeta.place}</p>
+                    <p class="card-text"><span class="fw-bold" >Capacity</span>: ${tarjeta.capacity}</p>
+                    <p class="card-text"><span class="fw-bold" >Assistance</span>: ${tarjeta.assistance}</p>
+                    <p class="card-text"><span class="fw-bold" >Price</span>: ${tarjeta.price}</p>
+                </div>
+                </div>
+                    `
+
+} )
+.catch( error => console.log(error) )

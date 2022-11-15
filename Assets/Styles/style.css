@@ -62,7 +62,7 @@ h1.heading {
 /* card */
 .card{
     width: 30vw;
-    height: 55vh;
+    height: 60vh;
 }
 .boton{
     background-color: #D90368;
@@ -189,20 +189,20 @@ fieldset{
 }
 
 /* card sola */
-.cartota{
+.card-details{
     width: 80%;
     min-height: 75vh;
     margin: auto;
 }
 
-.cardsolita{
+.card-alone{
     width: 80%;
     height: 60vh;
     border: rgb(255, 5, 101) 1px solid;
     border-radius: 10px;
 }
 
-.cardsolita img{
+.card-alone img{
     width: 50%;
     object-fit: cover;
     box-shadow: 2px 2px 3px black;

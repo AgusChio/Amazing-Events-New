@@ -45,7 +45,7 @@ function createCards(events) {
                             <h5 class="card-title"><b>${event.name}</b></h5>
                             <p class="card-text">${event.description}</p>
                             <p><b>Price: ${event.price}</b></p>
-                            <a href="./details.html?id=${event._id} class="boton btn btn-primary">Read More</a>
+                            <a href="./details.html?id=${event._id}" class="boton btn btn-primary">Read More</a>
                         </div>`
             fragment.appendChild(div);
         }

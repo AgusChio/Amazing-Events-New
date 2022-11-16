@@ -56,7 +56,7 @@ function filterCheckbox (events){
     const checked = Array.from(document.querySelectorAll( 'input[type=checkbox]:checked' )).map( input => input.value)
     if(checked.length!==0){
         return events.filter(event => checked.includes(event.category))
-    } else {
+    }else {
         return events
     }
 }
@@ -79,3 +79,5 @@ function filterSearch(events){
 searchBar.addEventListener('keyup', (e) =>{
     createCards (filterSearch ( filterCheckbox ( data ) ) );
 } )
+
+searchBar.addEventListener("submit" , (e) => e.preventDefault())

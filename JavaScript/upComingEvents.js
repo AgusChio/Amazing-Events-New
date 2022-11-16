@@ -8,7 +8,6 @@ let getCategories;
 
 let categoriesWithoutRepeating;
 
-
 let arrayCategoriesWithoutRepeating;
 
 fetch ("http://amazing-events.herokuapp.com/api/events")
@@ -76,6 +75,8 @@ function filterSearch(events){
         return events;
     }
 }
+
+search.addEventListener("submit" , (e) => e.preventDefault())
 
 searchBar.addEventListener('keyup', (e) =>{
     createCards (filterSearch ( filterCheckbox ( data ) ) );

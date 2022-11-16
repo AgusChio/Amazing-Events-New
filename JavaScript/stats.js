@@ -50,7 +50,7 @@ fetch ("http://amazing-events.herokuapp.com/api/events")
         tableLowerPercentage = pastEvents.slice(-1);
         tableHighestPercentage = pastEvents.slice(0, 1);
 
-         //Create highest %/ lowest %/ larger capacity  events
+        
         tableHighest.innerHTML = tableHighestPercentage[0].name;
         tableLower.innerHTML = tableLowerPercentage[0].name;
         tableLarger.innerHTML = tableLargerCapacity[0].name;

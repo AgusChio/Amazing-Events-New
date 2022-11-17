@@ -43,7 +43,12 @@
             </nav>
     </header>
 
+    <div>
+        <h1 class="p-3 d-flex justify-content-center bg-light">Home</h1>
+    </div>
+
     <div id="app">
+        {{filters}}
         <div>
             <div class="d-flex flex-wrap gap-3 p-3 text-white justify-content-center bg-light">
                 <div class="form-check p-3" v-for="category in categories">
@@ -52,25 +57,24 @@
                     </label>
                 </div>
                 <input class="form-control me-2" type="search" placeholder="Search" v-model="inputSearch">
-                {{filters}}
             </div>
         </div>
 
-        <main>
+        <main id="mainHome">
             <div class="d-flex flex-wrap gap-3 p-3 justify-content-center">
-                <div class="card" v-for="event in events">
+                <div class="card" v-for="event in filtered">
                     <img :src="event.image" class="imageCard" :alt="event.name">
                         <div class="card-body d-flex flex-column align-items-center justify-content-center p-0">
                             <h5 class="card-title"><b>{{event.name}}</b></h5>
                             <p class="card-text">{{event.description}}</p>
                             <p><b>Price: {{event.price}}</b></p>
-                            <a :href="'./details.html?id='+events._id" class="boton btn btn-primary">Read More</a>
+                            <a :href="'./details.html?id='+event._id" class="boton btn btn-primary">Read More</a>
                         </div>
                 </div>
             </div>
-                <p v-if="events.length == 0" class="text-black bg-light display-1 fw-bolder text-center d-flex justify-content-center aling d-wrap">There is no results for your search.</p>
+                <p v-if="filtered.length == 0" class="text-black bg-light display-1 fw-bolder text-center d-flex justify-content-center aling d-wrap">There is no results for your search.</p>
         </main>
-
+    </div>
 
     <footer class="bg-light text-center text-white">
         <div class="container p-4 pb-0">

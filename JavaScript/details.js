@@ -1,42 +1,32 @@
-const div = document.getElementById('card-details')
+const { createApp } = Vue;
 
-let data;
+const queryString = location.search;
+const params = new URLSearchParams(queryString);
+const id = params.get('id')
 
-let info;
+const app = createApp({
+    data() {
+        return {
+            events: [],
+            cardDetails: '',
+        }
+    },
+    created() {
+        fetch('https://amazing-events.herokuapp.com/api/events')
+            .then(response => response.json())
+            .then(data => {
+                this.events = data.events
+                this.cardDetails = this.events.find(event => (event._id.toString()) === id)
+            })
+            .catch(error => console.error(error))
+    },
+    mounted() {
 
-let queryString;
+    },
+    methods: {
+    },
+    computed: {
+    }
+})
 
-let params;
-
-let id;
-
-let events;
-
-fetch ("http://amazing-events.herokuapp.com/api/events")
-    .then( response => response.json() )
-    .then( (response) => {
-        info = response;
-        data = info.events;
-        queryString = location.search;
-        params = new URLSearchParams(queryString);
-        id = params.get("id")
-        events = data.find((events) => events._id == id);
-            div.innerHTML = `
-            <div class="d-flex justify-content-center gap-4 card-alone p-2 bg-light bg-gradient">
-                    <img src="${events.image}" class="card-img-top p-2 bg-light bg-gradient" alt="${events.name}">
-                    <div class="card-body d-flex justify-content-center align-items-center flex-column">
-                        <h3 class="card-title">${events.name}</h3>
-                        <br>
-                        <p class="card-text d-flex justify-content-evenly"><b>Date:</b>${events.date}</p>
-                        <p class="card-text d-flex justify-content-evenly"><b>Description:</b>${events.description}</p>
-                        <p class="card-text d-flex justify-content-evenly"><b>Place:</b>${events.place}</p>
-                        <p class="card-text d-flex justify-content-evenly"><b>Price:</b>${events.price}</p>
-                        <p class="card-text d-flex justify-content-evenly"><b>Capacity:</b> ${events.capacity}</p>
-                        <p class="card-text d-flex justify-content-evenly">${events.estimate
-					? "<b>Estimate:</b> " + events.estimate
-					: "<b>Asisstance:</b> " + events.assistance}</p>
-                    </div>
-                    `
-
-} )
-.catch( error => console.log(error) )
+app.mount('#app')

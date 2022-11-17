@@ -47,6 +47,7 @@
     </div>
 
     <main>
+      <div id="app">
         <table class="tg w-100">
             <thead>
               <tr>
@@ -58,10 +59,10 @@
                 <td class="tg-rcsl"><b>Event with larger capacity</b></td>
               </tr>
               <tr>
-                <td class="tg-rcsl" id="highPercentageAttendance"></td>
-                <td class="tg-rcsl" id="lowerPercentageAttendance"></td>
-                <td class="tg-rcsl" id="largerCapacity"></td>
-              </tr>
+                <td class="tg-rcsl">{{highAssistance.name}} </td>
+                <td class="tg-rcsl">{{lowAssistance.name}}</td>
+                <td class="tg-rcsl"> {{highCapacity.name}}</td>
+            </tr>
               <tr>
                 <td class="tg-qcsz" colspan="3">Upcoming events statistics by category</td>
               </tr>
@@ -72,6 +73,11 @@
                 <td class="tg-rcsl"><b>Revenues</b></td>
                 <td class="tg-wrc0"><b>Percentage of attendance</b></td>
               </tr>
+              <tr v-for="element of upcomingCategoryArray">
+                <td class="tg-rcslr">{{element.name}}</td>
+                <td class="tg-rcslr">${{element.revenue}}</td>
+                <td class="tg-rcslr">{{element.percentage}}%</td>
+            </tr>
             </tbody>
             <tfoot class="tg-rcsl" id="table-PastEvents">
               <tr>
@@ -82,8 +88,14 @@
                 <td class="tg-rcsl"><b>Revenues</b></td>
                 <td class="tg-wrc0"><b>Percentage of attendance</b></td>
               </tr>
+              <tr v-for=" element of pastCategoryArray">
+                <td class="tg-rcsl">{{element.name}}</td>
+                <td class="tg-rcsl">${{element.revenue}}</td>
+                <td class="tg-wrc0">{{element.percentage}}%</td>
+              </tr>
             </tfoot>
             </table>
+      </div>
     </main>
 
     <footer class="bg-light text-center text-white">

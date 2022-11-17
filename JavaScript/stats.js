@@ -1,116 +1,102 @@
+const  {createApp}  = Vue       //Creamos la app 
 
+createApp ( {
+    data(){    //
+        return{
+            cards : [],
+            pastEvents : [],
+            upcomingEvents : [],
+            pastEventsCategory: [],
+            upcomingEventsCategory: [],
+            pastCategoryArray: [],
+            upcomingCategoryArray: [],
+            highAssistance: [],
+            lowAssistance: [],
+            highCapacity: []
+        }
+    },
+    created(){                 
+        this.loadCards()
+    },
+    mounted(){                  
 
-// // ------------------contenedores-----------------//
-// const tableHighest = document.getElementById('highPercentageAttendance');
-// const tableLower = document.getElementById('lowerPercentageAttendance');
-// const tableLarger = document.getElementById('largerCapacity');
-// const tableUpComing = document.getElementById('table-UpCpmingEvents');
-// const tablePastEvents = document.getElementById('table-PastEvents')
+    },
+    methods: {                   
+        loadCards() {
+            fetch('https://amazing-events.herokuapp.com/api/events')
+            .then(response => response.json())
+            .then(data => {
+                this.cards = data.events
+                this.pastEvents = this.cards.filter(event => (event.date < data.currentDate) )
+                this.upcomingEvents = this.cards.filter(event => (event.date >= data.currentDate) )
+                const fnCategory = events => events.category
+                this.upcomingEventsCategory = Array.from(new Set (this.upcomingEvents.map(fnCategory)))
+                this.pastEventsCategory = Array.from(new Set (this.pastEvents.map(fnCategory)))
+                const attendanceEvents = this.percentajeDescendent(this.pastEvents);
+                const capacityEvents = this.capacityDescendent(this.pastEvents);
+                this.highAssistance = attendanceEvents[0];
+                this.lowAssistance = attendanceEvents[attendanceEvents.length - 1];
+                this.highCapacity = capacityEvents[0];
 
-// //------------------Variables Declaradas------------------//
-// let data;
-// let info;
-// let pastEvents;
-// let upcomingEvents;
-// let CategoriesUpcoming = [];
-// let CategoriesPast = [];
-// let eventsWithCategoryPast;
-// let pastCategoriesNoRepeat;
-// let eventsWithCategoryUpcoming;
-// let upcomingCategoriesNoRepeat;
-// let getCategories = (events) => events.category;
+                this.pastCategoryArray = this.statsPast(this.pastEventsCategory, this.pastEvents)
 
-// //------------------Datos Asincronicos------------------//
-// fetch ("http://amazing-events.herokuapp.com/api/events")
-//     .then( response => response.json() )
-//     .then( (response) => {
-//         info = response;
-//         data = info.events;
-//         data.forEach((event) => {
-// 			event.percentage = parseInt(
-// 				event.assistance
-// 					? ((event.assistance * 100) / event.capacity).toFixed(2)
-// 					: ((event.estimate * 100) / event.capacity).toFixed(2)
-// 			);
+                this.upcomingCategoryArray = this.statsUp(this.upcomingEventsCategory, this.upcomingEvents)
 
-// 			event.revenue = parseInt(
-// 				event.assistance
-// 					? event.assistance * event.price
-// 					: event.estimate * event.price
-// 			);
-// 		});
-// 		allFunction()
-// 	})
-//     .catch((error) => console.log(error));
+            })
+            },
 
-//     function eventsStatistics(){
-//         pastEvents = data.filter((event) => event.date < info.currentDate);
-    
-//         upcomingEvents = data.filter((event) => event.date > info.currentDate);
-//         pastEvents.sort((a, b) => b.percentage - a.percentage);
-//         tableLargerCapacity = data.sort((a, b) => b.capacity - a.capacity).slice(0, 1);
-//         tableLowerPercentage = pastEvents.slice(-1);
-//         tableHighestPercentage = pastEvents.slice(0, 1);
+            statsPast( category, event ){
+                let array = []
+                category.forEach(element => {
 
-//          //Create highest %/ lowest %/ larger capacity  events
-//         tableHighest.innerHTML = tableHighestPercentage[0].name;
-//         tableLower.innerHTML = tableLowerPercentage[0].name;
-//         tableLarger.innerHTML = tableLargerCapacity[0].name;
+                    let equalEvents = event.filter( event => event.category === element)
 
-//         eventsWithCategoryPast = pastEvents.filter(getCategories);
-//         pastCategoriesNoRepeat = Array.from(new Set(eventsWithCategoryPast.map(getCategories)));
+                    let revenues = equalEvents.map(event => (event.assistance * event.price)).reduce((accumulator, value)=> accumulator + value)
 
-//         eventsWithCategoryUpcoming = upcomingEvents.filter(getCategories);
-//         upcomingCategoriesNoRepeat = Array.from(
-//             new Set(eventsWithCategoryUpcoming.map(getCategories))
-//         );
-
-//     }
-
-//     function upComingOrPastStatisticsByCategory(){
-//         function createObj(arrayNoRepeat, arrayUpcomingOrPast, objName) {
-//                     arrayNoRepeat.sort().forEach((category) => {
-//                         let newObj = {
-//                             name: "",
-//                             revenue: 0,
-//                             percentage: 0,
-//                         };
+                    const assistance = equalEvents.map(evento => (evento.assistance * 100 ) / evento.capacity)
+                    const additionAssistance = assistance.reduce((accumulator, value) => accumulator + value) / assistance.length 
             
-//                         newObj.name = category;
-//                         newObj.revenue = arrayUpcomingOrPast
-//                             .filter((events) => events.category == category)
-//                             .map((events) => events.revenue)
-//                             .reduce((a, b) => a + b, 0);
-            
-//                         newObj.percentage =
-//                             arrayUpcomingOrPast
-//                                 .filter((events) => events.category == category)
-//                                 .map((events) => events.percentage)
-//                                 .reduce((a, b) => a + b, 0) /
-//                             arrayUpcomingOrPast.filter((events) => events.category == category).length;
-//                         objName.push(newObj);
-//                     });
-//                 }
-//                 createObj(upcomingCategoriesNoRepeat, upcomingEvents, CategoriesUpcoming);
-//                 createObj(pastCategoriesNoRepeat, pastEvents, CategoriesPast);
-            
-//                 function createTableRow(objUpcomingOrPast, container) {
-//                     objUpcomingOrPast.forEach((event) => {
-//                         container.innerHTML += `
-//                     <tr>
-//                         <td>${event.name}</td>
-//                         <td>$${event.revenue}</td>
-//                         <td>${event.percentage.toFixed(2)}%</td>
-//                     </tr>
+                    const data = {
+                        name: element,
+                        revenue: revenues,
+                        percentage: additionAssistance.toFixed(2)
+
+                    }
+                    array.push(data)
+                });
+                return array
+            },
+            statsUp( categoria, events ){
+                let array = []
+                categoria.forEach(element => {
+
+                    const equalEvents = events.filter( events => events.category === element)
                     
-//                     `;
-//                     });
-//                 }
-//                 createTableRow(CategoriesUpcoming, tableUpComing);
-//                 createTableRow(CategoriesPast, tablePastEvents);
-//             }
+                    const revenues = equalEvents.map(events => (events.estimate * events.price)).reduce((accumulator, value)=> accumulator + value)
+            
+            
+            
+                    const assistance = equalEvents.map(events => (events.estimate * 100 ) / events.capacity)
+                    const additionAssistance = assistance.reduce((accumulator, value) => accumulator + value) / assistance.length 
+            
+                    const data = {
+                        name: element,
+                        revenue: revenues,
+                        percentage: additionAssistance.toFixed(2)
 
-//     function allFunction(){
-//         eventsStatistics()
-//         upComingOrPastStatisticsByCategory()
-//     }
+                    }
+                    array.push(data)
+                });
+                return array
+            },
+            percentajeDescendent(array) {
+                return array.map(events => events).sort((b, a) => (((a.assistance * 100) / a.capacity) - ((b.assistance * 100) / b.capacity)))
+            },
+            capacityDescendent(array) {
+                return array.map(events => events).sort((b, a) => (a.capacity - b.capacity));
+            }
+    },
+
+    computed: {    
+    }
+}).mount("#app")
